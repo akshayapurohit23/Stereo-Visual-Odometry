@@ -1,0 +1,30 @@
+%YAML:1.0
+
+height: 370
+width: 1226
+
+
+LEFT.P: !!opencv-matrix
+    rows:3
+    cols:4
+    dt:d
+    data: [707.0912, 0.0, 601.8873, 0.0, 0.0, 707.0912, 183.1104, 0.0, 0.0, 0.0, 1.0, 0.0]
+
+
+RIGHT.P: !!opencv-matrix
+    rows:3
+    cols:4
+    dt:d
+    data: [707.0912, 0.0, 601.8873, -379.8145, 0.0, 707.0912, 183.1104, 0.0, 0.0, 0.0, 1.0, 0.0]
+
+
+
+start index: 0
+data length: 0
+local optimization times: 3
+
+
+trajectory file: "../pose01.txt" 
+trajectory file before: "../tfileBefore.txt"
+trajectory file after: "../tfileAfter.txt"
+
