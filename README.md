@@ -1,9 +1,9 @@
 ## Dependnicies:
-
-* OpenCV2.4
-* PCL
-* g2o
-
+```
+  OpenCV2.4
+  PCL
+  g2o
+```
 ## Building Project in terminal:
 ```
   mkdir build cd build cmake .. make
