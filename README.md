@@ -22,8 +22,7 @@ cd <project_dir>
 
 Visual Odometry results for two sequences from KITTI dataset.
 
-<img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq06.png" width=350 height=275 align="middle" >
-<img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq09.png" width=350 height=275 align="middle" >
+<img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq06.png" width=350 height=275 align="middle" >     <img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq09.png" width=350 height=275 align="middle" >
 
 
 
