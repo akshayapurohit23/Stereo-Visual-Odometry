@@ -6,21 +6,26 @@
 ```
 ## Building Project in terminal:
 ```
-  mkdir build cd build cmake .. make
+  mkdir build
+  cd build
+  cmake ..
+  make
 ```
 
-##  Run go to project directory
+##  Running project
 ```
+cd <project_dir>
 ./vo PATH_TO_LEFT_IMAGE_SET_DIRECTORY PATH_TO_RIGHT_IMAGE_SET_DIRECTORY PATH_TO_YAML_FILE
 ```
 
-Note: In case that the terminal shows "./vo: error while loading shared libraries: libg2o_core.so: cannot open shared object file: No such file or directory" or similar error, do following:
+## Results
 
-in terminal: ```cp -i /etc/ld.so.conf ~/Desktop/ gedit ~/Desktop/ld.so.conf```
+Visual Odometry results for two sequences from KITTI dataset.
 
-in gedit: add following line: "/usr/local/lib"
+<img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq06.png" width=350 height=275 align="middle" >
+<img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq09.png" width=350 height=275 align="middle" >
 
-in terminal: ```sudo cp -i ~/Desktop/ld.so.conf /etc/ld.so.conf sudo ldconfig```
+
 
 ## Contributors
 ```
