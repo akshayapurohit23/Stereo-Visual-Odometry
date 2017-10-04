@@ -8,7 +8,7 @@ Visual Odometry results for two sequences from KITTI dataset.
 <img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq06.png" width=350 height=275 align="middle" >     <img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq09.png" width=350 height=275 align="middle" >
 
 
-## Dependnicies:
+## Dependencies:
 ```
   OpenCV2.4
   PCL
@@ -29,11 +29,8 @@ cd <project_dir>
 ./vo PATH_TO_LEFT_IMAGE_SET_DIRECTORY PATH_TO_RIGHT_IMAGE_SET_DIRECTORY PATH_TO_YAML_FILE
 ```
 
-
-
-
 ## Contributors
 ```
-Akshaya Purohit
 Xiaoyu Zhou
+Akshaya Purohit
 ```
