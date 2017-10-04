@@ -16,11 +16,11 @@
 
 Note: In case that the terminal shows "./vo: error while loading shared libraries: libg2o_core.so: cannot open shared object file: No such file or directory" or similar error, do following:
 
-in terminal: cp -i /etc/ld.so.conf ~/Desktop/ gedit ~/Desktop/ld.so.conf
+in terminal: ```cp -i /etc/ld.so.conf ~/Desktop/ gedit ~/Desktop/ld.so.conf```
 
 in gedit: add following line: "/usr/local/lib"
 
-in terminal: sudo cp -i ~/Desktop/ld.so.conf /etc/ld.so.conf sudo ldconfig
+in terminal: ```sudo cp -i ~/Desktop/ld.so.conf /etc/ld.so.conf sudo ldconfig```
 
 ## Contributors
 ```
