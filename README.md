@@ -32,6 +32,8 @@ cd <project_dir>
 
 ## Contributors
 ```
-Xiaoyu Zhou
-Akshaya Purohit
+Xiaoyu Zhou @ucsdxiaoyuzhou
+Akshaya Purohit @akshayapurohit23
+Bolun Zhang @zblzcj
+Leonard Melvix @lmelvix
 ```
