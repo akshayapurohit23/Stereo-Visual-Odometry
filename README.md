@@ -7,7 +7,9 @@ Visual Odometry results for two sequences from the KITTI dataset.
 
 <img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq06.png" width=350 height=275 align="middle" >     <img src="https://raw.githubusercontent.com/akshayapurohit23/Stereo-Visual-Odometry/master/assets/Images/Seq09.png" width=350 height=275 align="middle" >
 
-[![align="middle"](https://img.youtube.com/vi/EFFH1OTh_IQ/0.jpg)](https://www.youtube.com/watch?v=EFFH1OTh_IQ)
+<p align="middle">
+[![](https://img.youtube.com/vi/EFFH1OTh_IQ/0.jpg)](https://www.youtube.com/watch?v=EFFH1OTh_IQ)
+</p>
 
 ## Dependencies:
 ```
