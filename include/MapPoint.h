@@ -18,17 +18,11 @@ public:
 			 unsigned int _keypointIdx);
 	void addObservation(Frame* frame, unsigned int pointIdx);
 	cv::Point3f getPositionInCameraCoordinate(cv::Mat rvec, cv::Mat tvec);
-
-
-public:
 	cv::Point3f pos; //pose in the first visited frame, in world coordinate
 	unsigned int firstVisitFrameID;
 	unsigned int firstVisitKeyPointIdx;
 	bool isBad = false;
-
 	std::map<Frame*, unsigned int> observations;
-
-
 };
 
 #endif

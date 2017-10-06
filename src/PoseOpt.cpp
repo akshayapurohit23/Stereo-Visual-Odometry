@@ -1,6 +1,5 @@
 #include "PoseOpt.h"
 
-// using namespace std;
 using namespace g2o;
 
 PoseOpt::PoseOpt(){
@@ -34,8 +33,6 @@ void PoseOpt::addNode(const vector<Frame*>& frames, int idx){
 			_invT(r,c) = invT(r,c);
 		}
 	}
-
-
 	v->setId(frames[idx]->frameID);
 	v->setEstimate(_invT);
 	optimizer.addVertex(v);
@@ -59,8 +56,6 @@ void PoseOpt::addEdge(const vector<Frame*>& frames, int fromIdx){
 		edge->vertices()[0] = optimizer.vertex(frames[fromIdx]->frameID);
 		edge->vertices()[1] = optimizer.vertex((*eIt).first);
 
-		// edge->setRobustKernel(robustKernel);
-
 		//information matrix
 	    Eigen::Matrix<double, 6, 6> information = Eigen::Matrix< double, 6,6 >::Identity();
 	    information(0,0) = information(1,1) = information(2,2) = 80;
@@ -82,13 +77,4 @@ void PoseOpt::solve() {
 	optimizer.optimize(25);
 	optimizer.save("../pose_graph/after_full_optimize.g2o");
 	cout<<"Optimization done."<<endl;
-	//update pose
-
 }
-
-
-
-
-
-
-

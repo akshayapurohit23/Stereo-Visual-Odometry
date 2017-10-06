@@ -36,14 +36,10 @@ class PoseOpt {
 public:
 	g2o::SparseOptimizer optimizer;
 	g2o::RobustKernel* robustKernel = g2o::RobustKernelFactory::instance()->construct( "Welsch" );
-
-public:
 	PoseOpt();
 	void addNode(const std::vector<Frame*>& frames, int idx);
 	void addEdge(const std::vector<Frame*>& frames, int fromIdx);
-	
 	void solve();	
-
 };
 
 

@@ -4,9 +4,6 @@ using namespace pcl;
 using namespace std;
 
 Mapviewer::Mapviewer(){
-	// viewer = new pcl::visualization::CloudViewer(n);
-	// cloud = new pcl::PointCloud<pcl::PointXYZ>();
-//	PointCloud<PointXYZRGB> curCamera;
 	float cameraSize = 0.1;
 	for(float x = -cameraSize; x < cameraSize; x+=(cameraSize/2)){
 		for(float y = -cameraSize; y < cameraSize; y+=(cameraSize/2)){
@@ -19,12 +16,8 @@ Mapviewer::Mapviewer(){
 				pt.g = 0;
 				pt.b = 0;
 				templateCamera.push_back(pt);
-			}
-		}
-	}
-
+			}}}
 }
-
 
 pcl::PointCloud<pcl::PointXYZRGB> Mapviewer::pointToPointCloud(std::vector<cv::Point3f> scenePts, 
 														    int R, int G, int B){
@@ -43,13 +36,11 @@ pcl::PointCloud<pcl::PointXYZRGB> Mapviewer::pointToPointCloud(std::vector<cv::P
 
 	result.height = 1;
 	result.width = result.points.size();
-
 	return result;
 }
 
 
 void Mapviewer::jointToMap(PointCloud<PointXYZRGB> frameMap, Eigen::Affine3d& trans){
-
 	if(false == initialized){
 		initialized = true;
 		cout << "map initializing! " << endl;
@@ -57,11 +48,8 @@ void Mapviewer::jointToMap(PointCloud<PointXYZRGB> frameMap, Eigen::Affine3d& tr
 		cout << "map initialized!" << endl;
 	}
 	entireMap = frameMap;
-	for(auto cam : allCameras){
+	for(auto cam : allCameras)
 		entireMap += cam;
-	}
-
-
 }
 
 void Mapviewer::addMorePoints(PointCloud<PointXYZRGB> frameMap, Eigen::Affine3d& trans, bool downsample){

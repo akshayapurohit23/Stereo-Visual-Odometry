@@ -15,5 +15,4 @@
 
 void SLAMsystem(std::string commonPath, std::string yamlPath);
 
-
 #endif

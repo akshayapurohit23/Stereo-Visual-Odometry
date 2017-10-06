@@ -36,17 +36,4 @@ public:
 	void addCamera(Eigen::Affine3d& trans);
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 #endif

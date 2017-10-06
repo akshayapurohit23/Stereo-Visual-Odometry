@@ -10,7 +10,6 @@
 #include "opencv2/calib3d/calib3d.hpp"
 
 
-
 void drawFeature(cv::Mat img, std::vector<cv::Point2f> features, char* windowName);
 void drawFeature(cv::Mat img, std::vector<cv::KeyPoint> features, char* windowName);
 

@@ -43,7 +43,6 @@ using ceres::Solver;
 #include "utils.h"
 
 using namespace std;
-//using namespace cv;
 using namespace ceres;
 using namespace examples;
 
@@ -57,9 +56,6 @@ private:
     Solver::Summary summary;
     const int pointBlkSize  = 3;
     const int cameraBlkSize = 6;
-//    double* cameraParameter_;
-//    int numCam;
-
 
 public:
     Problem& globalBAProblem;
@@ -69,9 +65,7 @@ public:
     void localBundleAdjustment(vector<Frame*> frames, int startIdx, int length);
 	void poseOptimization(vector<Frame* >& frames);
     void reprojectionOnlyAdjustment(Map* map, vector<Frame*> frames);
-
 	void solveProblem(Problem& pb);
-
 };
 
 

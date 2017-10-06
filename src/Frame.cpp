@@ -8,10 +8,8 @@ using namespace std;
 Frame::Frame(string leftImgFile, string rightImgFile, 
              STEREO_RECTIFY_PARAMS _srp, int _id, Map* _map):
 			 frameID(_id), map(_map), srp(_srp){
-
     imgL = imread(leftImgFile);
     imgR = imread(rightImgFile);
-
     if(!imgL.data || ! imgR.data){
         cout << "image does not exist..." << endl;
         exit;
@@ -22,15 +20,6 @@ Frame::Frame(string leftImgFile, string rightImgFile,
     cx = _srp.P1.at<double>(0,2);
     cy = _srp.P1.at<double>(1,2);
     b = -_srp.P2.at<double>(0,3)/fx;
-
-    // Mat imgLgray, imgRgray;
-    // Mat imgLgray, imgRgray;
-    // cvtColor(imgL, imgLgray, CV_BGR2GRAY);
-    // cvtColor(imgR, imgRgray, CV_BGR2GRAY);
-
-    // ORB_SLAM2::ORBextractor* detector = new ORB_SLAM2::ORBextractor(3000,1.1,8,10,5);
-    // (*detector)(imgLgray, cv::Mat(), keypointL, despL);
-    // (*detector)(imgRgray, cv::Mat(), keypointR, despR);
 
     SurfFeatureDetector detector(10, 6, 3);
     SurfDescriptorExtractor descriptor;
@@ -47,7 +36,6 @@ Frame::Frame(string leftImgFile, string rightImgFile,
 
     worldRvec = Mat::zeros(3, 1, CV_64F);
     worldTvec = Mat::zeros(3, 1, CV_64F);
-    // drawFeature(imgL, keypointL, "features");
     vector<KeyPoint> stereoKeypointLeft, stereoKeypointRight;
     vector<DMatch> stereoMatches;
 
@@ -73,9 +61,6 @@ Frame::Frame(string leftImgFile, string rightImgFile,
     }
     mappoints = vector<MapPoint*>(keypointL.size(), static_cast<MapPoint*>(NULL));
     originality = vector<bool>(keypointL.size(), false);
-    // drawFeature(imgL, keypointL, "features");
-//    drawMatch(imgL, keypointL, keypointR, 1, "stereo");
-//    waitKey(1000);
 }
 
 bool idx_comparator(const DMatch& m1, const DMatch& m2){
@@ -95,11 +80,9 @@ void Frame::matchFrame(Frame* frame, bool useMappoints){
                     matchedPrev, matchedCurr,
                     matches, 0.8);
 
-
     // obtain obj_pts, img_pts and matchedIdx
     vector<Point3f> obj_pts;
     vector<Point2f> img_pts;
-
     vector<DMatch> tempMatches;
     for(auto m : matches){
         if(mappoints[m.queryIdx]!=NULL && 
@@ -116,22 +99,13 @@ void Frame::matchFrame(Frame* frame, bool useMappoints){
     }
     Mat inliers;
     PnP(obj_pts, img_pts, inliers);
-
-    //========= test: get match ratio =================
-    // cout <<endl<<"frame " << frameID <<" to frame "<< frame->frameID <<endl; 
-    // cout << "current match ratio: " << (1.0*inliers.rows)/(1.0*keypointL.size()) << endl;
-    // cout << "current match number: " << inliers.rows << endl;
-    // cout << tvec.at<double>(0,0) << " " << tvec.at<double>(1,0) << " " << tvec.at<double>(2,0)<<endl;
-    //========= test ends =============================
     for(int n = 0; n < inliers.rows; n++){
         matchesBetweenFrame.push_back(matches[inliers.at<int>(n,0)]);
     }
 
     frame->rvec = rvec.clone();
     frame->tvec = tvec.clone();
-
     sort(matchesBetweenFrame.begin(), matchesBetweenFrame.end(), idx_comparator);
-
     vector<Point2f> finalP1, finalP2;
     for(int n = 0; n < matchesBetweenFrame.size(); n++){
         finalP1.push_back(keypointL[matchesBetweenFrame[n].queryIdx].pt);
@@ -144,7 +118,6 @@ void Frame::matchFrame(Frame* frame, bool useMappoints){
 void Frame::setWrdTransVectorAndTransScenePts(cv::Mat _worldRvec, cv::Mat _worldTvec) {
     worldRvec = _worldRvec.clone();
     worldTvec = _worldTvec.clone();
-
     transformScenePtsToWorldCoordinate();
 }
 
@@ -156,17 +129,13 @@ void Frame::transformScenePtsToWorldCoordinate(){
 void Frame::manageMapPoints(Frame* frame){    
     int newMappointCount = 0;
     int newObservationCount = 0;
-
     for(int n = 0; n < matchesBetweenFrame.size(); n++){
-
     	unsigned int qIdx = (unsigned int)matchesBetweenFrame[n].queryIdx;
     	unsigned int tIdx = (unsigned int)matchesBetweenFrame[n].trainIdx;
-
     	if(mappoints[qIdx] == NULL && frame->mappoints[tIdx] == NULL){
     		//create new mappoint in current frame
     		//create a pointer to this mappoint in the matched frame
     		//also need to add an observation
-//            originality[qIdx] = true;
     		mappoints[qIdx] = createNewMapPoint(qIdx);
             pointToExistingMapPoint(frame, mappoints[qIdx], tIdx);
 
@@ -174,7 +143,6 @@ void Frame::manageMapPoints(Frame* frame){
     		mappoints[qIdx]->addObservation(this, qIdx);
 
     		map->addMapPoint(mappoints[qIdx]);
-//    		newMappointCount++;
     	}
         else if(mappoints[qIdx] == NULL && frame->mappoints[tIdx] != NULL){
             pointToExistingMapPoint(this, frame->mappoints[tIdx], qIdx);
@@ -192,9 +160,6 @@ void Frame::manageMapPoints(Frame* frame){
 //    		newObservationCount++;
     	}
     }
-//     cout << "new mappoints number: " << newMappointCount <<endl;
-//     cout << "new observation number: " << newObservationCount << endl;
-    // cout << "between frame: "<<frameID <<" and frame: " << frame->frameID << endl<<endl;
 }
 
 void Frame::addEdgeConstrain(unsigned int id, Mat relativeRvec, Mat relativeTvec){
@@ -242,7 +207,6 @@ void Frame::judgeBadPointsKdTree() {
     }
 
     KDTree pointsKDTree(mappoints3f, false);
-
     int K =10, Emax = INT_MAX;
     int idx[K];
     float dist[K];
@@ -255,21 +219,17 @@ void Frame::judgeBadPointsKdTree() {
     //     cout << "averag distance: " << aveDist << endl;
 
     // }
-
-
 }
 
 
 
 MapPoint* Frame::createNewMapPoint(unsigned int pointIdx){
-//	MapPoint* ptrMp = new MapPoint(scenePtsinWorld[pointIdx], frameID, pointIdx);
 	return new MapPoint(scenePtsinWorld[pointIdx], frameID, pointIdx);
 }
 
 void Frame::pointToExistingMapPoint(Frame* frame, MapPoint* mp, unsigned int currIdx){
 	frame->mappoints[currIdx] = mp;
 }
-
 
 void Frame::PnP(vector<Point3f> obj_pts, 
                 vector<Point2f> img_pts,
@@ -280,14 +240,10 @@ void Frame::PnP(vector<Point3f> obj_pts,
     // Mat temprvec, temptvec;
     if(obj_pts.size() == 0){
         cout << "points for PnP is 0, cannot solve." << endl;
-        // success = false;
         return;
     }
     solvePnPRansac(obj_pts, img_pts, K, Mat(),
                    rvec, tvec, false, 2000,3.0, 300, inliers);
-    // matchedNumWithCurrentFrame = inliers.rows;
-
-    // cout << "PnP inliers: " << matchedNumWithCurrentFrame << endl;
 }
 
 void Frame::releaseMemory(){
@@ -387,9 +343,7 @@ void Frame::compute3Dpoints(vector<KeyPoint>& kl,
 	trikl.clear();
 	trikr.clear();
     inliers.clear();
-
 	double thres = 45*b;
-
 	for(int n = 0; n < copy_kl.size(); n++){
 		Point3f pd;
 		double d = fabs(copy_kl[n].pt.x - copy_kr[n].pt.x);
@@ -415,9 +369,9 @@ Eigen::Affine3d Frame::getWorldTransformationMatrix(){
             result(r,c) = R.at<double>(r,c);
         }
     }
+
     result(0,3) = worldTvec.at<double>(0,0);
     result(1,3) = worldTvec.at<double>(1,0);
     result(2,3) = worldTvec.at<double>(2,0);
-
     return result;
 }

@@ -13,9 +13,7 @@ void MapPoint::addObservation(Frame* frame, unsigned int pointIdx) {
 }
 
 Point3f MapPoint::getPositionInCameraCoordinate(Mat rvec, Mat tvec){
-
 	Eigen::Affine3d curTrans = vectorToTransformation(rvec, tvec);
 	Eigen::Affine3d curTransInv = curTrans.inverse();
-
 	return transformPoint(curTransInv, pos);;
 }

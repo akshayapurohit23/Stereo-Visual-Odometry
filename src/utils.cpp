@@ -5,19 +5,14 @@ using namespace std;
 using namespace cv;
 using namespace pcl;
 
-vector<string> getImgFileName(string &strPathImg)
-{
-
+vector<string> getImgFileName(string &strPathImg){
     string cpstrPathImg = strPathImg;
-
     vector<string> vstrImage;
 
     DIR *dir;
     class dirent *ent;
     class stat st;
-
     dir = opendir(cpstrPathImg.c_str());
-
     while ((ent = readdir(dir)) != NULL) {
         const string file_name = ent->d_name;
         const string full_file_name = cpstrPathImg + "/" + file_name;
@@ -29,7 +24,6 @@ vector<string> getImgFileName(string &strPathImg)
             continue;
 
         const bool is_directory = (st.st_mode & S_IFDIR) != 0;
-
         if (is_directory)
             continue;
 
@@ -37,10 +31,8 @@ vector<string> getImgFileName(string &strPathImg)
     }
     closedir(dir);
     sort(vstrImage.begin(), vstrImage.end());
-
     return vstrImage;
 }
-
 
 void transformationToVector(Eigen::Affine3d transformMatrix, Mat& rvec, Mat& tvec)
 {
@@ -59,8 +51,7 @@ void transformationToVector(Eigen::Affine3d transformMatrix, Mat& rvec, Mat& tve
 
 void convertTransformMatrixToVector(vector<Eigen::Affine3d> TransformaMatrix,
                                	    vector<Mat>& Rvec,
-                                    vector<Mat>& Tvec)
-{
+                                    vector<Mat>& Tvec){
 
     int numTrans = TransformaMatrix.size();
     Rvec.clear();
@@ -70,7 +61,6 @@ void convertTransformMatrixToVector(vector<Eigen::Affine3d> TransformaMatrix,
         Mat rvec;
         Mat tvec;
         transformationToVector(TransformaMatrix[n], rvec, tvec);
-        
         Rvec.push_back(rvec);
         Tvec.push_back(tvec);
     }
@@ -82,23 +72,22 @@ void getAccumulateMotion(const vector<Mat>& Rvec,
                          Mat& accumRvec, Mat& accumTvec){
     accumRvec = Mat::zeros(3,1,CV_64F);
     accumTvec = Mat::zeros(3,1,CV_64F);
-    
     Eigen::Affine3d accumMatrix = vectorToTransformation(accumRvec, accumTvec);
     for(int n = startIdx; n < endIdx; n++){
         Mat tempRvec, tempTvec;
         tempRvec = Rvec[n].clone();
         tempTvec = Tvec[n].clone();
-
         Eigen::Affine3d tempMatrix = vectorToTransformation(tempRvec, tempTvec);
-
         accumMatrix = tempMatrix * accumMatrix;
     }
+
     Mat R = Mat::zeros(3,3,CV_64F);
     for(int r = 0; r < 3; r++){
         for(int c = 0; c < 3; c++){
             R.at<double>(r,c) = accumMatrix(r,c);
         }
     }
+
     Rodrigues(R, accumRvec);
     accumTvec.at<double>(0,0) = accumMatrix(0,3);
     accumTvec.at<double>(1,0) = accumMatrix(1,3);
@@ -112,11 +101,9 @@ void getRelativeMotion(const Mat startPosR, const Mat startPosT,
     t2to1 = Mat::zeros(3,1,CV_64F);
 
     Eigen::Affine3d startTrans, endTrans, trans1to2;
-
     Mat startPosRMat, endPosRMat;
     Rodrigues(startPosR, startPosRMat);
     Rodrigues(endPosR, endPosRMat);
-
     for(int r = 0; r < 3; r++){
         for(int c = 0; c < 3; c++){
             startTrans(r,c) = startPosRMat.at<double>(r,c);
@@ -127,12 +114,10 @@ void getRelativeMotion(const Mat startPosR, const Mat startPosT,
     startTrans(0,3) = startPosT.at<double>(0,0);
     startTrans(1,3) = startPosT.at<double>(1,0);
     startTrans(2,3) = startPosT.at<double>(2,0);
-
     endTrans(0,3) = endPosT.at<double>(0,0);
     endTrans(1,3) = endPosT.at<double>(1,0);
     endTrans(2,3) = endPosT.at<double>(2,0);
 
-//    trans2to1 = startTrans * endTrans.inverse();
     trans1to2 = endTrans * startTrans.inverse();
     Mat R = Mat::zeros(3,3,CV_64F);
     for(int r = 0; r < 3; r++){
@@ -145,8 +130,6 @@ void getRelativeMotion(const Mat startPosR, const Mat startPosT,
     t2to1.at<double>(0,0) = trans1to2(0,3);
     t2to1.at<double>(1,0) = trans1to2(1,3);
     t2to1.at<double>(2,0) = trans1to2(2,3);
-
-//    cout <<"in function: "<<  t2to1.at<double>(2,0) << endl;
 }
 
 Eigen::Affine3d vectorToTransformation(Mat rvec, Mat tvec){
@@ -161,25 +144,8 @@ Eigen::Affine3d vectorToTransformation(Mat rvec, Mat tvec){
 	result(0, 3) = tvec.at<double>(0, 0);
 	result(1, 3) = tvec.at<double>(1, 0);
 	result(2, 3) = tvec.at<double>(2, 0);
-
 	return result;
 }
-
-// void transformationToVector(Eigen::Affine3d trans, cv::Mat& rvec, cv::Mat& tvec){
-//     rvec = Mat::zeros(3,1,CV_64F);
-//     tvec = Mat::zeros(3,1,CV_64F);
-
-//     Mat R  = Mat::zeros(3,3,CV_64F);
-//     for(int r = 0; r < 3; r++){
-//         for(int c = 0; c < 3; c++){
-//             R.at<double>(r,c) = trans(r,c);
-//         }
-//     }
-//     Rodrigues(R, rvec);
-//     tvec.at<double>(0,0) = trans(0,3);
-//     tvec.at<double>(1,0) = trans(1,3);
-//     tvec.at<double>(2,0) = trans(2,3);
-// }
 
 vector<Point3f> transformPoints(Eigen::Affine3d trans, vector<Point3f> obj_pts){
 	vector<Point3f> result;
@@ -190,18 +156,15 @@ vector<Point3f> transformPoints(Eigen::Affine3d trans, vector<Point3f> obj_pts){
 	return result;
 }
 
+
 Point3f transformPoint(Eigen::Affine3d trans, Point3f pt){
     Point3f result;
-
-
     Eigen::Affine3d invTrans = trans.inverse();
     result.x = (float)invTrans(0,0)*pt.x + (float)invTrans(0,1)*pt.y + (float)invTrans(0,2)*pt.z + (float)invTrans(0,3);
     result.y = (float)invTrans(1,0)*pt.x + (float)invTrans(1,1)*pt.y + (float)invTrans(1,2)*pt.z + (float)invTrans(1,3);
     result.z = (float)invTrans(2,0)*pt.x + (float)invTrans(2,1)*pt.y + (float)invTrans(2,2)*pt.z + (float)invTrans(2,3);
-
     return result;
 }
-
 
 vector<Point3f> PointCloudtoPoint3f(PointCloud<PointXYZ> ptcloud){
     PointXYZ ptxyz;
@@ -217,6 +180,7 @@ vector<Point3f> PointCloudtoPoint3f(PointCloud<PointXYZ> ptcloud){
     }
     return result;
 }
+
 vector<Point3f> PointCloudtoPoint3f(PointCloud<PointXYZI> ptcloud){
     PointXYZI ptxyzi;
     Point3f pt;
@@ -226,11 +190,11 @@ vector<Point3f> PointCloudtoPoint3f(PointCloud<PointXYZI> ptcloud){
         pt.x = ptxyzi.x;
         pt.y = ptxyzi.y;
         pt.z = ptxyzi.z;
-
         result.push_back(pt);
     }
     return result;
 }
+
 PointCloud<PointXYZ> Point3ftoPointCloud(vector<Point3f> pts){
     PointXYZ ptxyz;
     Point3f pt;
@@ -240,7 +204,6 @@ PointCloud<PointXYZ> Point3ftoPointCloud(vector<Point3f> pts){
         ptxyz.x = pt.x;
         ptxyz.y = pt.y;
         ptxyz.z = pt.z;
-
         result.points.push_back(ptxyz);
     }
     return result;
@@ -253,7 +216,6 @@ double normOfTransform( cv::Mat rvec, cv::Mat tvec ){
 Point3f getCameraCenter(const Mat Rvec,
                         const Mat Tvec){
     Point3f cameraCenter;
-    //vector<Point3f> ccenter;
     Mat worldCenter = Mat::zeros(4,1,CV_64F);
     Mat homCameraCenter = Mat::zeros(4,1,CV_64F);
     worldCenter.at<double>(3,0)=1;
@@ -268,7 +230,5 @@ Point3f getCameraCenter(const Mat Rvec,
     cameraCenter.x = homCameraCenter.at<double>(0,0)/homCameraCenter.at<double>(3,0);
     cameraCenter.y = homCameraCenter.at<double>(1,0)/homCameraCenter.at<double>(3,0);
     cameraCenter.z = homCameraCenter.at<double>(2,0)/homCameraCenter.at<double>(3,0);
-    //ccenter.push_back(cameraCenter);
-    return cameraCenter;//Point3ftoPointCloud(ccenter);
+    return cameraCenter;
 }
-
